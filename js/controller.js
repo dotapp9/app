@@ -16,6 +16,7 @@ var z= document.getElementById("cc");
 y.style.display="none";
 z.style.display="none";
 x.style.display = "block";
+$('#myTable').show();
 $('#bbView').hide();
 }
 function cc()
@@ -105,29 +106,42 @@ var z= document.getElementById("cc");
 }
   function submitPackage(){
 	  $('#cover-spin').show(0);
-	  ApiService.post(document.packages, 'tour_package', 'http://dotapp-dotapp.apps.ca-central-1.starter.openshift-online.com/api/1/test', function(){
+	  ApiService.post(document.packages, 'tour_package', 'http://localhost:9080/api/1/test', function(){
 		$('#cover-spin').hide();
 		alert("Package Created Successfully.");
 	  }, function(){
 		$('#cover-spin').hide();
 	  });
-	  Packages.addPackage(function(data, status){
+/*	  Packages.addPackage(function(data, status){
 		  $('#cover-spin').hide();
 		  if('success' === status)
 		    alert("Package Creation failed.");
-	  });
+	  });*/
   }
 	$('#main').hide();
 	function doLogin(elem){
 		$('#cover-spin').show(0);
-		var loginPanel = document.loginPanel;
-		setTimeout(function(){ 
+
+	  ApiService.getQuery(document.loginPanel, 'select UserId from adminUsers where UserName = $Login and UserPasswd = $Password', 'http://localhost:9080/api/1/test', function(responseData, status){
+		$('#cover-spin').hide();
+		//alert("Package Created Successfully.");
+		if(responseData.length>0){
+			$('#loginPanel').hide();
+			$('#staff').show();
+			$('#main').show();
+		}else{
+			alert("Authentication failed.");
+		}
+	  }, function(){
+		$('#cover-spin').hide();
+	  });
+		/*setTimeout(function(){ 
 			$('#loginPanel').hide();
 			$('#staff').show();
 			$('#main').show();
 			$('#cover-spin').hide();
 		
-		}, 2000);
+		}, 2000);*/
 	}
 function loadEnquiryPkgs()
 {
@@ -137,6 +151,31 @@ var z= document.getElementById("cc");
 y.style.display="none";
 z.style.display="none";
 x.style.display = "block";
+var myBooks = [
+            {
+                "Tour Id": "1",
+                "Date of Travel": "Computer Architecture",
+                "No Of Passengers": "Computers",
+                "No Of Days": "125.60"
+            },
+            {
+                "Tour Id": "2",
+                "Date of Travel": "Asp.Net 4 Blue Book",
+                "No Of Passengers": "Programming",
+                "No Of Days": "56.00"
+            },
+            {
+                "Tour Id": "3",
+                "Date of Travel": "Popular Science",
+                "No Of Passengers": "Science",
+                "No Of Days": "210.40"
+            }
+        ];
+createTableFromJSON('showAllPackages', myBooks, function(row, tableData){
+		//alert("Row index is: " + JSON.stringify(tableData[row.rowIndex-1]));
+	$('#myTable').hide();
+	$('#bbView').show();
+});
 }
 function findPackage(){
  var x = document.getElementById("bb");
@@ -147,3 +186,52 @@ function findPackage(){
 	x.style.display = "block";
 	$('#bbView').show();
 }
+
+function createTableFromJSON(tableId, myBooks, rowCallback) {
+
+
+        // EXTRACT VALUE FOR HTML HEADER. 
+        // ('Book ID', 'Book Name', 'Category' and 'Price')
+        var col = [];
+        for (var i = 0; i < myBooks.length; i++) {
+            for (var key in myBooks[i]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+		table.setAttribute("id","myTable");
+		//table.setAttribute("style", "border: solid 1px #DDD;border-collapse: collapse;padding: 2px 3px;text-align: center;");
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+			th.setAttribute("id","a"+(i+1));
+			//th.setAttribute("style", "text-align:center;font-size:8pt;width:100%;color:white;cellspacing:0px;cellpadding:0px;padding-right:16px;");
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < myBooks.length; i++) {
+
+            tr = table.insertRow(-1);
+			tr.onclick = function(event){rowCallback(this, myBooks)};
+            for (var j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+				tabCell.setAttribute("id", "a"+(j+1));
+				//tabCell.setAttribute("style", "border: solid 1px #DDD;border-collapse: collapse;padding: 2px 3px;text-align: center;");
+                tabCell.innerHTML = myBooks[i][col[j]];
+            }
+        }
+
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById(tableId);
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+    }

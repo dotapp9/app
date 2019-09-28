@@ -292,12 +292,19 @@ padding-left:8px;
 	
 
 }
+#myTable th {
+color:white;
+background-color: grey;
+ text-align:center;
+padding-left:8px;
+}
 #myTable td{
 padding-top:8px;
 padding-bottom:8px;
 }
  #myTable tr:hover {
   background-color: #f1f1f1;
+  cursor: pointer;
 }
 #myTable tr {
   border-bottom: 1px solid #ddd;

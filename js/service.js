@@ -71,7 +71,7 @@ var ApiService = {
 		}
 	});
 	},
-	get : function(requestData, tableId, url, successCallback, errorCallback){
+	getQuery : function(requestData, query, url, successCallback, errorCallback){
 		var request = {};
 		var keyElems = "";
 		var tokenElems = "";
@@ -79,24 +79,17 @@ var ApiService = {
 		for(var idx=0; idx<requestData.length; idx++){
 			var packageItem = requestData[idx];
 			if(packageItem['localName'] === 'input'){
-				if(count>0){
-					keyElems +=","+packageItem['name'];
-					tokenElems += ",$"+packageItem['name'];
-				}else{
-					keyElems +=packageItem['name'];
-					tokenElems += "$"+packageItem['name'];
-				}
-				count++;
+				if(packageItem['name'] !== "")
 				request[packageItem['name']] = packageItem['value'];
 			}
 		}
-		var query = "INSERT INTO "+tableId+"("+keyElems+") VALUES ("+tokenElems+")";
 		request.query = query;
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: url,
 		crossDomain: true,
 		contentType:'application/json',
+		data: JSON.stringify(request),
 		dataType: 'json',
 		success: function(responseData, textStatus, jqXHR) {
 			successCallback(responseData, textStatus);
