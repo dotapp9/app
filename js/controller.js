@@ -106,25 +106,19 @@ var z= document.getElementById("cc");
 }
   function submitPackage(){
 	  $('#cover-spin').show(0);
-	  ApiService.post(document.packages, 'tour_package', 'http://localhost:9080/api/1/test', function(){
+	  ApiService.post(document.packages, 'tour_package', '/api/1/test', function(){
 		$('#cover-spin').hide();
 		alert("Package Created Successfully.");
 	  }, function(){
 		$('#cover-spin').hide();
 	  });
-/*	  Packages.addPackage(function(data, status){
-		  $('#cover-spin').hide();
-		  if('success' === status)
-		    alert("Package Creation failed.");
-	  });*/
   }
 	$('#main').hide();
 	function doLogin(elem){
 		$('#cover-spin').show(0);
 
-	  ApiService.getQuery(document.loginPanel, 'select UserId from adminUsers where UserName = $Login and UserPasswd = $Password', 'http://localhost:9080/api/1/test', function(responseData, status){
+	  ApiService.getQuery(document.loginPanel, 'select UserId from adminUsers where UserName = $Login and UserPasswd = $Password', '/api/1/test', function(responseData, status){
 		$('#cover-spin').hide();
-		//alert("Package Created Successfully.");
 		if(responseData.length>0){
 			$('#loginPanel').hide();
 			$('#staff').show();
@@ -135,13 +129,6 @@ var z= document.getElementById("cc");
 	  }, function(){
 		$('#cover-spin').hide();
 	  });
-		/*setTimeout(function(){ 
-			$('#loginPanel').hide();
-			$('#staff').show();
-			$('#main').show();
-			$('#cover-spin').hide();
-		
-		}, 2000);*/
 	}
 function loadEnquiryPkgs()
 {

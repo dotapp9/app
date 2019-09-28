@@ -1,4 +1,6 @@
 var ApiService = {
+	//backEndUrl : 'http://dotapp-dotapp.apps.ca-central-1.starter.openshift-online.com',
+	backEndUrl : 'http://localhost:9080',
 	post : function(requestData, tableId, url, successCallback, errorCallback){
 		var request = {};
 		var keyElems = "";
@@ -22,7 +24,7 @@ var ApiService = {
 		request.query = query;
 	$.ajax({
 		type: 'POST',
-		url: url,
+		url: ApiService.backEndUrl+url,
 		crossDomain: true,
 		contentType:'application/json',
 		data: JSON.stringify(request),
@@ -58,7 +60,7 @@ var ApiService = {
 		request.query = query;
 	$.ajax({
 		type: 'PUT',
-		url: url,
+		url: ApiService.backEndUrl+url,
 		crossDomain: true,
 		contentType:'application/json',
 		data: JSON.stringify(request),
@@ -86,7 +88,7 @@ var ApiService = {
 		request.query = query;
 	$.ajax({
 		type: 'POST',
-		url: url,
+		url: ApiService.backEndUrl+url,
 		crossDomain: true,
 		contentType:'application/json',
 		data: JSON.stringify(request),
